@@ -1,6 +1,5 @@
 <script lang="ts">
-	import NoteList from './NoteList.svelte'
-	import Input from './Input.svelte'
+	import NoteList from './NoteList.svelte';
     import SignUp from './SignUp.svelte';
     import SignOut from './SignOut.svelte';
     import { supabase } from '$lib/supabaseClient';
@@ -14,17 +13,20 @@
 	}
 </script>
 
-<h1>Wholesome notes</h1>
-
-{#await $userPromise}
-	<p>Loading...</p>
-{:then { data: { user }, error }}
-	{#if error}
+<main class="container">
+	<h1>Wholesome notes</h1>
+	
+	{#await $userPromise}
+		<p>Loading...</p>
+	{:then { data: { user }, error }}
+		{#if error}
+			<SignUp on:signedIn={updateUser} on:signedUp={updateUser} />
+		{:else}
+			<NoteList />
+			<SignOut on:signedOut={updateUser} />
+		{/if}
+	{:catch error}
 		<SignUp on:signedIn={updateUser} on:signedUp={updateUser} />
-	{:else}
-		<NoteList />
-		<SignOut on:signedOut={updateUser} />
-	{/if}
-{:catch error}
-	<SignUp on:signedIn={updateUser} on:signedUp={updateUser} />
-{/await}
+	{/await}
+	
+</main>

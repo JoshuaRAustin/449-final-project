@@ -12,5 +12,5 @@
 </script>
 
 <section>
-	<button on:click={signOut}>Sign out</button>
+	<button class="btn btn-primary" on:click={signOut}>Sign out</button>
 </section>

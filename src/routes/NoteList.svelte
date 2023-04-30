@@ -68,16 +68,18 @@
 </script>
 <section>
 	<h2>Add note</h2>
-	<input type="text" bind:value={newNote}>
-	<button on:click={async () => await addNote(true)}>:&rpar;</button>
-	<button on:click={async () => await addNote(false)}>:&lpar;</button>
+	<div class="input-group">
+		<textarea class="form-control" bind:value={newNote} />
+	</div>
+	<button class="btn btn-primary" on:click={async () => await addNote(true)}>😃</button>
+	<button class="btn btn-primary" on:click={async () => await addNote(false)}>😞</button>
 	{#if $jokeMessage}
 		<p>{$jokeMessage}</p>
 	{/if}
 	<h2>Notes</h2>
-	<ol>
+	<ol class="list-group">
 		{#each $notes as note}
-			<li>{note.note} - {note.happy ? ":)" : ":("}</li>
+			<li class="list-group-item">{note.note} - {note.happy ? ":)" : ":("}</li>
 		{/each}
 	</ol>
 </section>
