@@ -39,6 +39,8 @@
 					let jokeFetch = await fetch("https://geek-jokes.sameerkumar.website/api?format=json");
 					let jokeJson = await jokeFetch.json();
 					jokeMessage.set(jokeJson.joke);
+				} else {
+					jokeMessage.set("");
 				}
 			} else {
 				fetchError = true;
