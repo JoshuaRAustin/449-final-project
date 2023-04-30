@@ -12,11 +12,11 @@
 	async function addNote(happy: boolean) {
 		let { data: { user } } = await supabase.auth.getUser();
     	if (!newNote) {
-			alert("Please enter a note!");
+			return;
 		}
 
 		if (!user) {
-			alert("Make sure to log in!");
+			alert("Error: user is not logged in, but this is being rendered anyway");
 		}
 		
 		const { error } = await supabase.from("notes").insert({

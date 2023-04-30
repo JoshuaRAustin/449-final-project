@@ -7,8 +7,9 @@
 	
 	let user_email: string;
 	let user_password: string;
-	let signInError: boolean = false;
-	let signUpError: boolean = false;
+	let signInError: string = "";
+	let signUpError: string = "";
+	let checkEmailForConfirmation: boolean = false;
 
 	$: console.log(signUpError);
 
@@ -19,10 +20,8 @@
 			password: user_password
 		});
 
-		dispatch("signedUp");
-
-		signUpError = !(response.error === null);
-		// console.log(response.data.user?.email);
+		signUpError = response.error ? response.error.message : "";
+		
 		if (!signUpError) {
 			dispatch("signedUp");
 		}
@@ -35,9 +34,10 @@
 			password: user_password
 		});
 
-		signInError = !(response.error === null);
-		// console.log(response.data.user?.email);
+		signInError = response.error ? response.error.message : "";
+		
 		if (!signInError) {
+			checkEmailForConfirmation = true;
 			dispatch("signedIn");
 		}
 	}
@@ -54,9 +54,12 @@
 	<button class="btn btn-primary" on:click={signUp}>Sign Up</button>
 	<button class="btn btn-primary" on:click={signIn}>Sign In</button>
 	{#if signUpError}
-		<p>Sign up error</p>
+		<p>{signUpError}</p>
 	{/if}
 	{#if signInError}
-		<p>Sign in error</p>
+		<p>{signInError}</p>
+	{/if}
+	{#if checkEmailForConfirmation}
+		<p>Check email for confirmation</p>
 	{/if}
 </section>
