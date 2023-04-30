@@ -14,7 +14,7 @@
 </script>
 
 <main class="container">
-	<h1>Wholesome notes</h1>
+	<h1 class="text-center">Wholesome notes</h1>
 	
 	{#await $userPromise}
 		<p>Loading...</p>
@@ -22,8 +22,8 @@
 		{#if error}
 			<SignUp on:signedIn={updateUser} on:signedUp={updateUser} />
 		{:else}
-			<NoteList />
 			<SignOut on:signedOut={updateUser} />
+			<NoteList />
 		{/if}
 	{:catch error}
 		<SignUp on:signedIn={updateUser} on:signedUp={updateUser} />

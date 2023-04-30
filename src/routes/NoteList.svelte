@@ -33,7 +33,7 @@
 			newNote = "";
 			let { data: notesRows, error } = await getNotes();
 			if (notesRows) {
-				notes.set(notesRows);
+				notes.set(notesRows.reverse());
 
 				if (!happy) {
 					let jokeFetch = await fetch("https://geek-jokes.sameerkumar.website/api?format=json");
@@ -60,7 +60,7 @@
 	onMount(async () => {
 		let { data: notesRows, error } = await getNotes();
 		if (notesRows) {
-			notes.set(notesRows);
+			notes.set(notesRows.reverse());
 		} else {
 			fetchError = true;
 		}
@@ -71,15 +71,17 @@
 	<div class="input-group">
 		<textarea class="form-control" bind:value={newNote} />
 	</div>
-	<button class="btn btn-primary" on:click={async () => await addNote(true)}>😃</button>
-	<button class="btn btn-primary" on:click={async () => await addNote(false)}>😞</button>
+	<div class="btn-group mt-3 mb-3 d-flex">
+		<button class="btn btn-warning" on:click={async () => await addNote(true)}>😃</button>
+		<button class="btn btn-primary" on:click={async () => await addNote(false)}>😞</button>
+	</div>
 	{#if $jokeMessage}
 		<p>{$jokeMessage}</p>
 	{/if}
 	<h2>Notes</h2>
 	<ol class="list-group">
 		{#each $notes as note}
-			<li class="list-group-item">{note.note} - {note.happy ? ":)" : ":("}</li>
+			<li class="list-group-item" style="border: 5px var({note.happy ? "--bs-warning-border-subtle" : "--bs-primary-border-subtle"}) solid">{note.note}</li>
 		{/each}
 	</ol>
 </section>
