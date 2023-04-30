@@ -1,25 +1,58 @@
 <script lang="ts">
 	import { supabase } from "$lib/supabaseClient";
+	import type { AuthError } from "@supabase/supabase-js";
+    import { createEventDispatcher } from "svelte";
 
+	const dispatch = createEventDispatcher();
+	
 	let user_email: string;
 	let user_password: string;
+	let signInError: boolean = false;
+	let signUpError: boolean = false;
 
-	async function signIn() {
-		console.log(user_email);
-		console.log(user_password);
+	$: console.log(signUpError);
+
+	async function signUp() {
 
 		let response = await supabase.auth.signUp({
 			email: user_email,
 			password: user_password
 		});
 
-		console.log(response.error);
-		console.log(response.data.user?.email);
+		dispatch("signedUp");
+
+		signUpError = !(response.error === null);
+		// console.log(response.data.user?.email);
+		if (!signUpError) {
+			dispatch("signedUp");
+		}
+	}
+
+	async function signIn() {
+
+		let response = await supabase.auth.signInWithPassword({
+			email: user_email,
+			password: user_password
+		});
+
+		signInError = !(response.error === null);
+		// console.log(response.data.user?.email);
+		if (!signInError) {
+			dispatch("signedIn");
+		}
 	}
 </script>
 
 <section>
+	<h2>Sign in or sign up</h2>
 	<input type="email" bind:value={user_email}>
 	<input type="password" bind:value={user_password}>
+	<button on:click={signUp}>Sign Up</button>
 	<button on:click={signIn}>Sign In</button>
+	{#if signUpError}
+		<p>Sign up error</p>
+	{/if}
+	{#if signInError}
+		<p>Sign in error</p>
+	{/if}
 </section>

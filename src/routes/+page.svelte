@@ -2,31 +2,29 @@
 	import NoteList from './NoteList.svelte'
 	import Input from './Input.svelte'
     import SignUp from './SignUp.svelte';
+    import SignOut from './SignOut.svelte';
     import { supabase } from '$lib/supabaseClient';
-	// import { supabase } from '$lib/supabaseClient';
-    // import { onMount } from 'svelte';
+	import type { UserResponse } from '@supabase/supabase-js'
+    import { writable, type Writable } from 'svelte/store';
 
-	let userPromise = supabase.auth.getUser();
+	let userPromise: Writable<Promise<UserResponse>> = writable(supabase.auth.getUser());
 
-	// onMount(async () => {
-	// 	let { data: { user }, error } = await supabase.auth.getUser();
-	// 	if (error) {
-	// 		authError = error;
-	// 	}
-	// })
+	function updateUser() {
+		userPromise.set(supabase.auth.getUser());
+	}
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>Wholesome notes</h1>
 
-{#await userPromise}
-	
+{#await $userPromise}
+	<p>Loading...</p>
 {:then { data: { user }, error }}
-	<Input />
-
-	<NoteList />
+	{#if error}
+		<SignUp on:signedIn={updateUser} on:signedUp={updateUser} />
+	{:else}
+		<NoteList />
+		<SignOut on:signedOut={updateUser} />
+	{/if}
 {:catch error}
-
+	<SignUp on:signedIn={updateUser} on:signedUp={updateUser} />
 {/await}
-
-<SignUp />
